@@ -145,16 +145,7 @@ jobs:
           if [[ -n "${EDGECHAT_S3//[[:space:]]/}" && "${EDGECHAT_S3//[[:space:]]/}" != "r2" ]]; then
             printf '%s' "$EDGECHAT_S3" | npx wrangler secret put EDGECHAT_S3 --config wrangler.ci.toml
           fi
-      - name: Prepare Worker encryption secret
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          EDGECHAT_WORKER_NAME: cfchat
-          EDGECHAT_SECRETS_FILE: .tmp/worker-secrets.json
-          EDGECHAT_ENCRYPTION_KEYRING: ${{ secrets.EDGECHAT_ENCRYPTION_KEYRING }}
-          EDGECHAT_APPLY_ENCRYPTION_KEYRING: ${{ github.event_name == 'workflow_dispatch' && inputs.apply_encryption_keyring || false }}
-          EDGECHAT_ROTATE_ENCRYPTION_KEY: ${{ github.event_name == 'workflow_dispatch' && inputs.rotate_encryption_key || false }}
-        run: node .github/scripts/prepare-worker-encryption-secret.mjs
+      
       - name: Validate optional TURN configuration
         env:
           EDGECHAT_TURN_KEY_ID: ${{ secrets.EDGECHAT_TURN_KEY_ID }}
